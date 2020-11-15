@@ -9,9 +9,9 @@
 #include "LT.h"
 #include "PolishNotation.h"
 #include "MFST.h"
+#include "CreateT.h"
 
 using namespace std;
-void makeOutLt(LT::LexTable &lextable);
 int main(int argc, char* argv[])
 {
 	setlocale(LC_CTYPE, "Russian");
@@ -29,9 +29,10 @@ int main(int argc, char* argv[])
 		LT::LexTable lextable = LT::Create(LT_MAXSIZE);
 		IT::IdTable idtable = IT::Create(TI_MAXSIZE);
 
-		In::IN in = In::getin(parm.in, parm.out, lextable, idtable);
+		In::IN in = In::getin(parm.in, parm.out);
+		CreateT::fillTable(in.text, lextable, idtable);
 
-		MFST_TRACE_START;								// оладка
+		MFST_TRACE_START;								// отладка
 		MFST::Mfst mfst(lextable, GRB::getGreibach()); 	// автомат
 
 		mfst.start();
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
 		mfst.printrules();
 
 		bool a = PN::PolishNotation(3, lextable, idtable);
-		In::makeOutLt(lextable);
+		CreateT::makeOutLt(lextable);
 
 		Log::WriteIn(log, in);
 		Log::Close(log);

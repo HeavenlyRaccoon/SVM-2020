@@ -1,5 +1,6 @@
 #pragma once
 #include "IT.h"
+#include <stack>
 
 #define LEXEMA_FIXSIZE	1			//фикс размер лексемы
 #define FUNCTIONSIZE	20
@@ -49,6 +50,5 @@ namespace LT {
 	void Add(LexTable& lextable, Entry entry);
 	Entry* GetEntry(LexTable& lextable, int n);
 	void Delete(LexTable& lextable);
-	char compareLexem(char* lexem, int *idx, Entry* entry, IT::IdTable *idtable);
 	int getSnByPos(LexTable& lex, int pos);
 }

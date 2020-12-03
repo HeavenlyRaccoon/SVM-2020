@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CodeGenerator.cpp" />
     <ClCompile Include="CreateT.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="FST.cpp" />
@@ -164,8 +165,10 @@
     <ClCompile Include="Parm.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="PolishNotation.cpp" />
+    <ClCompile Include="Semantic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CodeGenerator.h" />
     <ClInclude Include="CreateT.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="FST.h" />
@@ -179,6 +182,10 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PolishNotation.h" />
     <ClInclude Include="Rule.h" />
+    <ClInclude Include="Semantic.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ASM.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

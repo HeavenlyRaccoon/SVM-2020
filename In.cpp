@@ -13,7 +13,7 @@ namespace In {
 
 	bool addSpaces(string &code, char symbol)
 	{
-		const char* symbols = "(),;-+*=/{}";
+		const char* symbols = "(),;-+*=/{}%";
 		for (int i = 0; i < strlen(symbols); i++) {
 			if (symbol == symbols[i]) {
 				code = code + " " + symbol + " ";

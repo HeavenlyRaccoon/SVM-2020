@@ -17,6 +17,8 @@ namespace IT {
 		IDTYPE		idtype;
 		Entry* next = nullptr;
 
+		bool declared = false;
+
 		struct
 		{
 			int visible;

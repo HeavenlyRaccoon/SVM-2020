@@ -26,6 +26,7 @@ namespace IT {
 			strcpy(idtable.table->visibility.function, entry.visibility.function);
 			idtable.table->idxfirstLE = entry.idxfirstLE;
 			idtable.table->visibility.visible = entry.visibility.visible;
+			idtable.table->declared = entry.declared;
 			for (int i = 0; i < ID_MAXSIZE; i++) { idtable.table->id[i] = entry.id[i]; }
 			idtable.table->id[ID_MAXSIZE] = '\0';
 			idtable.table->iddatatype = entry.iddatatype;

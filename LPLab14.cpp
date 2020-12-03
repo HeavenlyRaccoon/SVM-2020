@@ -10,6 +10,8 @@
 #include "PolishNotation.h"
 #include "MFST.h"
 #include "CreateT.h"
+#include "Semantic.h"
+#include "CodeGenerator.h"
 
 using namespace std;
 int main(int argc, char* argv[])
@@ -39,9 +41,12 @@ int main(int argc, char* argv[])
 		mfst.savededucation();
 		mfst.printrules();
 
-		bool a = PN::PolishNotation(3, lextable, idtable);
+		PN::PolishNotation(lextable, idtable);
 		CreateT::makeOutLt(lextable);
-
+		if (Semantic::semAnalyzer(lextable, idtable)) {
+			cout << "OK";
+		}
+		CG::CodeGeneration(idtable, lextable);
 		Log::WriteIn(log, in);
 		Log::Close(log);
 	}

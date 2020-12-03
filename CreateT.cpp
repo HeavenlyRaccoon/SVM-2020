@@ -10,6 +10,7 @@ namespace CreateT {
 		int vis = 0;
 		bool visCheck = false;
 		bool main = false;
+		bool decl = false;
 	}flags;
 	stack < string > func;
 
@@ -85,7 +86,7 @@ namespace CreateT {
 		IT::Entry *value = idtable.head;
 		cout << "Номер\t|" << "\tНазвание\t|" << "\tТип данных\t|" << "\tТип идентификатора\t|" << "\tУровень видимости\t|" << "\t\tФункция\t\t|" << "\tЗначение" << endl;
 		while (value->next != nullptr) {
-			cout << value->idxfirstLE << "\t|\t" << value->id << "\t\t|\t" << value->iddatatype << "\t\t|\t\t" << value->idtype << "\t\t|\t\t" << value->visibility.visible << "\t\t|\t\t" << value->visibility.function << "\t\t|\t" << value->value.vstr->str;
+			cout << value->idxfirstLE << "\t|\t" << value->id << "\t\t|\t" << value->iddatatype << "\t\t|\t\t" << value->idtype << "\t\t|\t\t" << value->visibility.visible << "\t\t|\t\t" << value->visibility.function << "\t\t|\t" << value->value.vstr->str<<"\t"<<value->declared;
 			value = value->next;
 			cout << '\n';
 		}
@@ -218,9 +219,13 @@ namespace CreateT {
 			FST::NODE(1, FST::RELATION('=', 1)),
 			FST::NODE()
 		);
+		FST::FST fst18(lexem, 2,		//%
+			FST::NODE(1, FST::RELATION('%', 1)),
+			FST::NODE()
+		);
 
-		FST::FST fst18(lexem, 2,		//1234535
-			FST::NODE(9, FST::RELATION('0', 1), FST::RELATION('1', 1), FST::RELATION('2', 1),
+		FST::FST fst19(lexem, 2,		//1234535
+			FST::NODE(10, FST::RELATION('0', 1), FST::RELATION('1', 1), FST::RELATION('2', 1),
 				FST::RELATION('3', 1), FST::RELATION('4', 1), FST::RELATION('5', 1),
 				FST::RELATION('6', 1), FST::RELATION('7', 1), FST::RELATION('8', 1), FST::RELATION('9', 1)),
 			FST::NODE(10, FST::RELATION('0', 1), FST::RELATION('1', 1), FST::RELATION('2', 1),
@@ -229,7 +234,7 @@ namespace CreateT {
 
 		);
 
-		FST::FST fst19(lexem, 5,		//main
+		FST::FST fst20(lexem, 5,		//main
 			FST::NODE(1, FST::RELATION('m', 1)),
 			FST::NODE(1, FST::RELATION('a', 2)),
 			FST::NODE(1, FST::RELATION('i', 3)),
@@ -241,8 +246,8 @@ namespace CreateT {
 		entry->priority = NULL;
 		if (FST::execute(fst1) == -1) { flags.DataType = 1; return 't'; }
 		else if (FST::execute(fst2) == -1) { flags.DataType = 2; return 't'; }
-		else if (FST::execute(fst3) == -1) { flags.type = 2; flags.visCheck = true;  return 'f'; }
-		else if (FST::execute(fst4) == -1) return 'd';
+		else if (FST::execute(fst3) == -1) { flags.type = 2; flags.visCheck = true; flags.decl = true;  return 'f'; }
+		else if (FST::execute(fst4) == -1) { flags.decl = true; return 'd'; }
 		else if (FST::execute(fst5) == -1) return 'r';
 		else if (FST::execute(fst6) == -1) return 'p';
 		else if (FST::execute(fst7) == -1) return ';';
@@ -256,9 +261,10 @@ namespace CreateT {
 		else if (FST::execute(fst15) == -1) { entry->priority = 3; return '*'; }
 		else if (FST::execute(fst16) == -1) { entry->priority = 3; return '/'; }
 		else if (FST::execute(fst17) == -1) return '=';
+		else if (FST::execute(fst18) == -1) { entry->priority = 3; return '%'; }
 		else {
-			if (FST::execute(fst18) == -1) { flags.type = 4; flags.DataType = 1; }
-			else if(FST::execute(fst19) == -1){
+			if (FST::execute(fst19) == -1) { flags.type = 4; flags.DataType = 1; }
+			else if(FST::execute(fst20) == -1){
 				flags.type = 2;
 				flags.DataType = 1;
 				flags.main = true;
@@ -283,15 +289,18 @@ namespace CreateT {
 				switch (flags.type) {
 				case 1: {
 					entryBuf.idtype = IT::V;
+					entryBuf.declared = flags.decl;
 					break;
 				}
 				case 2: {
 					func.push(lexem);
 					entryBuf.idtype = IT::F;
+					entryBuf.declared = flags.decl;
 					break;
 				}
 				case 3: {
 					entryBuf.idtype = IT::P;
+					entryBuf.declared = true;
 					break;
 				}
 				case 4: {
@@ -303,7 +312,14 @@ namespace CreateT {
 					os >> str2;
 					str = str + str2;
 					strcpy(entryBuf.id, &str[0]);
-					strcpy(entryBuf.value.vstr->str, lexem);
+					if (entryBuf.iddatatype == IT::STR) {
+						strcpy(entryBuf.value.vstr->str, lexem);
+					}
+					else
+					{
+						entryBuf.value.vint = atoi(lexem);
+					}
+					
 					break;
 				}
 				default:
@@ -312,7 +328,8 @@ namespace CreateT {
 				strcpy(entryBuf.visibility.function, func.top().c_str());
 				IT::Add(*idtable, entryBuf);
 				(*idx)++;
-				if (flags.type == 4) return LEX_LITERAL;
+				flags.decl = false;
+				if (flags.type == 4) { flags.type = 1; return LEX_LITERAL; }
 				if (flags.main) { flags.main = false; flags.type = 1; return MAIN_LITERAL; }
 				else return 'i';
 			}

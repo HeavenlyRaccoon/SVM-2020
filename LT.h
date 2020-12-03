@@ -25,6 +25,10 @@
 #define LEX_MINUS		'-'
 #define LEX_STAR		'*'
 #define LEX_DIRSLASH	'/'
+#define LEX_ASIGN		'='
+#define LEX_MODULO		'%'
+#define LEX_FUNCPARM	'@'
+#define LT_FUNCTION_MAX_PARMS 3
 
 
 
@@ -36,6 +40,12 @@ namespace LT {
 		int idxTI;
 		int priority;
 		Entry* next = nullptr;
+		struct funcParms
+		{
+			char* funcName;
+			int count;
+			int idx[LT_FUNCTION_MAX_PARMS];
+		} func;
 	};
 
 	struct LexTable {

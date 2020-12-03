@@ -39,10 +39,11 @@ namespace GRB
 			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('M'))
 		),
 		Rule(NS('M'), GRB_ERROR_SERIES + 3, // ошибка в выражении
-			4,
+			5,
 			Rule::Chain(2, TS('+'), NS('E')),
 			Rule::Chain(2, TS('-'), NS('E')),
 			Rule::Chain(2, TS('*'), NS('E')),
+			Rule::Chain(2, TS('%'), NS('E')),
 			Rule::Chain(2, TS('/'), NS('E'))
 		),
 		Rule(NS('F'), GRB_ERROR_SERIES + 4, // ошибка в параметрах функции

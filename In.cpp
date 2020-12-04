@@ -13,7 +13,7 @@ namespace In {
 
 	bool addSpaces(string &code, char symbol)
 	{
-		const char* symbols = "(),;-+*=/{}%";
+		const char* symbols = "(),;-+*=/{}%[]<>!&";
 		for (int i = 0; i < strlen(symbols); i++) {
 			if (symbol == symbols[i]) {
 				code = code + " " + symbol + " ";
@@ -54,7 +54,12 @@ namespace In {
 				}
 
 				//добавляем пробелы до и после спец знаков
-				if (addSpaces(in.text, str[i])) {
+				if ((str[i] == '+'&&str[i + 1] == '+') || (str[i] == '-'&&str[i + 1] == '-')) {
+					in.text = in.text + " " + str[i] + str[i + 1] + " ";
+					i = i + 1;
+					continue;
+				}
+				else if (addSpaces(in.text, str[i])) {
 					continue;
 				}
 

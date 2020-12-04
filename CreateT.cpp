@@ -165,66 +165,76 @@ namespace CreateT {
 			FST::NODE()
 		);
 
-		FST::FST fst7(lexem, 2,		//;
+		FST::FST fst7(lexem, 3,		//++
+			FST::NODE(1, FST::RELATION('+', 1)),
+			FST::NODE(1, FST::RELATION('+', 2)),
+			FST::NODE()
+		);
+		FST::FST fst8(lexem, 3,		//--
+			FST::NODE(1, FST::RELATION('-', 1)),
+			FST::NODE(1, FST::RELATION('-', 2)),
+			FST::NODE()
+		);
+		FST::FST fst9(lexem, 2,		//;
 			FST::NODE(1, FST::RELATION(';', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst8(lexem, 2,		//,
+		FST::FST fst10(lexem, 2,		//,
 			FST::NODE(1, FST::RELATION(',', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst9(lexem, 2,		//{
+		FST::FST fst11(lexem, 2,		//{
 			FST::NODE(1, FST::RELATION('{', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst10(lexem, 2,		//}
+		FST::FST fst12(lexem, 2,		//}
 			FST::NODE(1, FST::RELATION('}', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst11(lexem, 2,		//(
+		FST::FST fst13(lexem, 2,		//(
 			FST::NODE(1, FST::RELATION('(', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst12(lexem, 2,		//)
+		FST::FST fst14(lexem, 2,		//)
 			FST::NODE(1, FST::RELATION(')', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst13(lexem, 2,		//+
+		FST::FST fst15(lexem, 2,		//+
 			FST::NODE(1, FST::RELATION('+', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst14(lexem, 2,		//-
+		FST::FST fst16(lexem, 2,		//-
 			FST::NODE(1, FST::RELATION('-', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst15(lexem, 2,		//*
+		FST::FST fst17(lexem, 2,		//*
 			FST::NODE(1, FST::RELATION('*', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst16(lexem, 2,		//
+		FST::FST fst18(lexem, 2,		//
 			FST::NODE(1, FST::RELATION('/', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst17(lexem, 2,		//=
+		FST::FST fst19(lexem, 2,		//=
 			FST::NODE(1, FST::RELATION('=', 1)),
 			FST::NODE()
 		);
-		FST::FST fst18(lexem, 2,		//%
+		FST::FST fst20(lexem, 2,		//%
 			FST::NODE(1, FST::RELATION('%', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst19(lexem, 2,		//1234535
+		FST::FST fst21(lexem, 2,		//1234535
 			FST::NODE(10, FST::RELATION('0', 1), FST::RELATION('1', 1), FST::RELATION('2', 1),
 				FST::RELATION('3', 1), FST::RELATION('4', 1), FST::RELATION('5', 1),
 				FST::RELATION('6', 1), FST::RELATION('7', 1), FST::RELATION('8', 1), FST::RELATION('9', 1)),
@@ -234,7 +244,7 @@ namespace CreateT {
 
 		);
 
-		FST::FST fst20(lexem, 5,		//main
+		FST::FST fst22(lexem, 5,		//main
 			FST::NODE(1, FST::RELATION('m', 1)),
 			FST::NODE(1, FST::RELATION('a', 2)),
 			FST::NODE(1, FST::RELATION('i', 3)),
@@ -250,21 +260,23 @@ namespace CreateT {
 		else if (FST::execute(fst4) == -1) { flags.decl = true; return 'd'; }
 		else if (FST::execute(fst5) == -1) return 'r';
 		else if (FST::execute(fst6) == -1) return 'p';
-		else if (FST::execute(fst7) == -1) return ';';
-		else if (FST::execute(fst8) == -1) return ',';
-		else if (FST::execute(fst9) == -1) { if (flags.visCheck)flags.vis++; return '{'; }
-		else if (FST::execute(fst10) == -1) { if (flags.visCheck) { flags.vis--; func.pop(); if (func.empty()) { flags.visCheck = false; } } return '}'; }
-		else if (FST::execute(fst11) == -1) { entry->priority = 0; flags.type = 3; if (flags.visCheck)flags.vis++; return '('; }
-		else if (FST::execute(fst12) == -1) { entry->priority = 0; flags.type = 1; if (flags.visCheck)flags.vis--;  return ')'; }
-		else if (FST::execute(fst13) == -1) { entry->priority = 2; return '+'; }
-		else if (FST::execute(fst14) == -1) { entry->priority = 2; return '-'; }
-		else if (FST::execute(fst15) == -1) { entry->priority = 3; return '*'; }
-		else if (FST::execute(fst16) == -1) { entry->priority = 3; return '/'; }
-		else if (FST::execute(fst17) == -1) return '=';
-		else if (FST::execute(fst18) == -1) { entry->priority = 3; return '%'; }
+		else if (FST::execute(fst7) == -1) { entry->priority = 2; return 'x'; }
+		else if (FST::execute(fst8) == -1) { entry->priority = 2; return 'z';}
+		else if (FST::execute(fst9) == -1) return ';';
+		else if (FST::execute(fst10) == -1) return ',';
+		else if (FST::execute(fst11) == -1) { if (flags.visCheck)flags.vis++; return '{'; }
+		else if (FST::execute(fst12) == -1) { if (flags.visCheck) { flags.vis--; func.pop(); if (func.empty()) { flags.visCheck = false; } } return '}'; }
+		else if (FST::execute(fst13) == -1) { entry->priority = 0; flags.type = 3; if (flags.visCheck)flags.vis++; return '('; }
+		else if (FST::execute(fst14) == -1) { entry->priority = 0; flags.type = 1; if (flags.visCheck)flags.vis--;  return ')'; }
+		else if (FST::execute(fst15) == -1) { entry->priority = 2; return '+'; }
+		else if (FST::execute(fst16) == -1) { entry->priority = 2; return '-'; }
+		else if (FST::execute(fst17) == -1) { entry->priority = 3; return '*'; }
+		else if (FST::execute(fst18) == -1) { entry->priority = 3; return '/'; }
+		else if (FST::execute(fst19) == -1) return '=';
+		else if (FST::execute(fst20) == -1) { entry->priority = 3; return '%'; }
 		else {
-			if (FST::execute(fst19) == -1) { flags.type = 4; flags.DataType = 1; }
-			else if(FST::execute(fst20) == -1){
+			if (FST::execute(fst21) == -1) { flags.type = 4; flags.DataType = 1; }
+			else if(FST::execute(fst22) == -1){
 				flags.type = 2;
 				flags.DataType = 1;
 				flags.main = true;

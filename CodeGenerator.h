@@ -27,6 +27,10 @@
 #define MODULO {Asm<<"\tpop ebx\n\tpop eax\n\tcdq\n\tcwd\n\tdiv ebx\n\t\push edx\n";}
 #define RETURN_INT {Asm<<"\tmov eax, "<<itElement.visibility.function << '_' << itElement.id<<"\n\tret\n";}
 #define RETURN_STR {Asm<<"\tmov eax, offset "<<itElement.visibility.function << '_' << itElement.id<<"\n\tret\n";}
+#define FIRST_INC {Asm<<"\tinc "<<firstIdName<<"\n";}
+#define FIRST_DEC {Asm<<"\tdec "<<firstIdName<<'\n';}
+#define INC {Asm<<"\tpop eax\n\tinc eax\n\tpush eax\n";}
+#define DEC {Asm<<"\tpop eax\n\tdec eax\n\tpush eax\n";}
 
 namespace CG {
 	bool CodeGeneration(IT::IdTable& it, LT::LexTable& lt);

@@ -197,6 +197,8 @@ namespace PN
 					case LEX_MINUS:
 					case LEX_STAR:
 					case LEX_MODULO:
+					case LEX_INC:
+					case LEX_DEC:
 					case LEX_DIRSLASH:
 					case LEX_SEMICOLON:
 						addToStack(stack, result, lenta);
@@ -284,6 +286,8 @@ namespace PN
 			break;
 		case LEX_PLUS:
 		case LEX_MINUS:
+		case LEX_INC:
+		case LEX_DEC:
 			if (stack.empty() || element->priority > stack.top()->priority)
 				stack.push(element);
 			else

@@ -92,6 +92,8 @@ namespace Semantic {
 			case LEX_DIRSLASH:
 			case LEX_MINUS:
 			case LEX_MODULO:
+			case LEX_INC:
+			case LEX_DEC:
 			case LEX_STAR: {
 				if (f.idtype == 2) {
 					throw ERROR_THROW_IN(126, lextable->sn, position);

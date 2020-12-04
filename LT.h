@@ -28,6 +28,16 @@
 #define LEX_ASIGN		'='
 #define LEX_MODULO		'%'
 #define LEX_FUNCPARM	'@'
+#define LEX_INC			'x'
+#define LEX_DEC			'z'
+#define LEX_MORE		'>'
+#define LEX_LESS		'<'
+#define LEX_EQUAL		'&'
+#define LEX_DIFFERENT	'!'
+#define LEX_IF			'w'
+#define LEX_ELSE		'e'
+#define LEX_LEFTSQUARE	'['
+#define LEX_RIGHTSQUARE	']'
 #define LT_FUNCTION_MAX_PARMS 3
 
 

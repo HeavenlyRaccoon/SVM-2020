@@ -114,7 +114,8 @@ namespace CG {
 					strcpy(firstIdName, itElement.visibility.function);
 					strcat(firstIdName, "_");
 					strcat(firstIdName, itElement.id);
-					f.firstId = false;
+					if(ltElement->next->lexema[0]!=LEX_DEC&& ltElement->next->lexema[0] != LEX_INC) f.firstId = false;
+					
 				}
 				else if (f.func && !f.funcBody) {
 					if (!f.funcParm) {
@@ -260,7 +261,19 @@ namespace CG {
 				}
 				Asm << "\tcall " << ltElement->func.funcName<<'\n';
 				Asm << "\tpush eax\n";
+				break;
 			}
+			case LEX_INC: {
+				if (f.firstId)FIRST_INC
+				else INC;
+				break;
+			}
+			case LEX_DEC: {
+				if (f.firstId)FIRST_DEC
+				else DEC;
+				break;
+			}
+
 			default:
 				break;
 			}

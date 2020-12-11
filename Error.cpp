@@ -41,7 +41,7 @@ namespace Error {
 		ERROR_ENTRY(603, "Îøèáêà â âûğàæåíèè!"),
 		ERROR_ENTRY(604, "Îøèáêà â ïàğàìåòğàõ ôóíêöèè!"),
 		ERROR_ENTRY(605, "Îøèáêà â ïàğàìåòğàõ âûçûâàåìîé ôóíêöèè!"),
-		ERROR_ENTRY_NODEF(606),
+		ERROR_ENTRY(606, "Îøèáêà â ëîãè÷åñêîì âûğàæåíèè!"),
 		ERROR_ENTRY_NODEF(607),
 		ERROR_ENTRY_NODEF(608),
 		ERROR_ENTRY_NODEF(609),
@@ -67,6 +67,19 @@ namespace Error {
 			ERROR error;
 			error = errors[id];
 			error.inext.col = col;
+			error.inext.line = line;
+			return error;
+		}
+		else {
+			return errors[0];
+		}
+	}
+
+	ERROR geterrorin(int id, int line = -1) {
+		if (id > 0 && id < ERROR_MAX_ENTRY) {
+			ERROR error;
+			error = errors[id];
+			error.inext.col =-1;
 			error.inext.line = line;
 			return error;
 		}

@@ -65,7 +65,10 @@ namespace Log {
 
 		*log.stream << "Ошибка " << error.id << ":" << error.message << endl;
 
-		if (error.inext.line != -1) {
+		if (error.inext.line != -1&&error.inext.col==-1) {
+			*log.stream << "Строка " << error.inext.line << endl << endl;
+		}
+		else if (error.inext.line != -1 && error.inext.col != -1) {
 			*log.stream << "Строка " << error.inext.line << " позиция: " << error.inext.col << endl << endl;
 		}
 	}

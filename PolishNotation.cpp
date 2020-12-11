@@ -160,10 +160,9 @@ namespace PN
 	{
 		LT::Entry *lenta = LT::GetEntry(lexTable, 0);
 		std::stack<LT::Entry*> stack;
-
 		while (lenta->next != NULL)
 		{
-			if (lenta->lexema[0] == LEX_ASIGN || lenta->lexema[0] == LEX_RETURN)
+			if (lenta->lexema[0] == LEX_ASIGN&&lenta->next->lexema[0]!=LEX_LENGTH&& lenta->next->lexema[0] != LEX_CONVERT)
 			{
 				// обработка польской записи
 				LT::Entry* result = new LT::Entry();
@@ -206,6 +205,49 @@ namespace PN
 						break;
 					}
 				}
+				*unionChain = *resultHead;
+				*lenta = *unionChain;
+			}
+			else if (lenta->lexema[0] == LEX_IF) {
+				LT::Entry* result = new LT::Entry();
+				LT::Entry* resultHead = new LT::Entry();
+				LT::Entry* unionChain = lenta->next;
+				while (lenta->lexema[0]!=LEX_RIGHTHESIS)
+				{
+					switch (lenta->lexema[0])
+					{
+					case LEX_ID:
+					case LEX_LITERAL:
+						addResult(*result, *lenta, idTable);
+						result = result->next;
+						break;
+					case LEX_LEFTHESIS:
+						result->idxTI = lenta->idxTI;
+						result->lexema[0] = lenta->lexema[0];
+						result->priority = lenta->priority;
+						result->sn = lenta->sn;
+						result->next = new LT::Entry();
+						resultHead = result;
+						result = result->next;
+						break;
+					case LEX_MORE:
+					case LEX_LESS:
+					case LEX_EQUAL:
+					case LEX_DIFFERENT:
+						stack.push(lenta);
+					default:
+						break;
+					}
+					lenta = lenta->next;
+				}
+				addResult(*result, *stack.top());
+				stack.pop();
+				result = result->next;
+				result->idxTI = lenta->idxTI;
+				result->lexema[0] = lenta->lexema[0];
+				result->priority = lenta->priority;
+				result->sn = lenta->sn;
+				result->next = lenta->next;
 				*unionChain = *resultHead;
 				*lenta = *unionChain;
 			}

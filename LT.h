@@ -14,7 +14,11 @@
 #define LEX_FUNCTION	'f'	//лексема для function
 #define LEX_DECLARE		'd'	//лексема для declare
 #define LEX_RETURN		'r'	//лексема для return
-#define LEX_PRINT		'p' //лексема для print
+#define LEX_OUTPUT		'o' //лексема для output
+#define LEX_OUTPUTLINE	'n' //лексема для outputline
+#define LEX_LOOP		'p' //лексема для loop
+#define LEX_LENGTH		'c'
+#define LEX_CONVERT		'q'
 #define LEX_SEMICOLON	';'
 #define LEX_COMMA		','
 #define LEX_LEFTBRACE	'{'
@@ -50,6 +54,8 @@ namespace LT {
 		int idxTI;
 		int priority;
 		Entry* next = nullptr;
+		int numIf;
+		int numLoop;
 		struct funcParms
 		{
 			char* funcName;

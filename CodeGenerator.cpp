@@ -12,8 +12,12 @@ namespace CG {
 		Asm << HEADER;
 		Asm << "EXTRN copyStr: proc\n";
 		Asm << "EXTRN outint: proc\n";
+		Asm << "EXTRN outlineint: proc\n";
 		Asm << "EXTRN outstr: proc\n";
+		Asm << "EXTRN outlinestr: proc\n";
 		Asm << "EXTRN concatStr: proc\n";
+		Asm << "EXTRN len: proc\n";
+		Asm << "EXTRN ctoi: proc\n";
 		Asm << "\n.STACK 4096\n";
 
 		CreateDataSegment(it, Asm);
@@ -62,6 +66,15 @@ namespace CG {
 
 	struct flag
 	{	
+		bool leng = false;
+		bool convert = false;
+		int countIf;
+		int countLoop;
+		bool loopBody = false;
+		bool loopParm = false;
+		bool elseBody = false;
+		bool ifParm = false;
+		bool ifBody = false;
 		bool firstId = true;
 		bool func = false;
 		bool ret = false;
@@ -69,7 +82,8 @@ namespace CG {
 		int iddatatype = NULL;
 		int idtype = NULL;
 		bool asign = false;
-		bool print = false;
+		bool output = false;
+		bool outputline = false;
 		bool funcBody = false;
 		bool funcParm = false;
 		bool mainBody = false;
@@ -90,6 +104,10 @@ namespace CG {
 			{
 			case LEX_ID: {
 				itElement = IT::GetEntry(it, ltElement->idxTI);
+				if (f.leng) { LENGTH; f.leng = false; break; }
+				if (f.convert) { CONVERT; f.convert = false; break; }
+				if (f.loopParm) { LOOP_PARM; f.loopParm = false; f.loopBody = true; break; }
+				if (f.ifParm) { PUSH_INT; break; }
 				if (f.ret && !f.mainBody) { 
 					if (itElement.iddatatype == 1) RETURN_INT
 					else {
@@ -107,8 +125,8 @@ namespace CG {
 					Asm << "\tcall ExitProcess\n";
 					f.ret = false; break;
 				}
-				else if (f.firstId&&ltElement->next->lexema[0] == LEX_SEMICOLON&&!f.print) break;
-				else if (f.firstId&&!f.print&&!f.func&&f.funcBody) {
+				else if (f.firstId&&ltElement->next->lexema[0] == LEX_SEMICOLON&&!f.output&&!f.outputline) break;
+				else if (f.firstId&&!f.output&&!f.outputline&&!f.func&&f.funcBody) {
 					f.iddatatype = itElement.iddatatype;
 					f.idtype = itElement.idtype;
 					strcpy(firstIdName, itElement.visibility.function);
@@ -135,9 +153,13 @@ namespace CG {
 						if (itElement.idtype == 3) PUSH_PARM_STR
 						else PUSH_STR;
 					}
-					if (f.print) {
-						if (itElement.iddatatype == 1) PRINT_INT
-						else PRINT_STR;
+					if (f.output) {
+						if (itElement.iddatatype == 1) OUTPUT_INT
+						else OUTPUT_STR;
+					}
+					if (f.outputline) {
+						if (itElement.iddatatype == 1) OUTPUTLINE_INT
+						else OUTPUTLINE_STR;
 					}
 					
 				}
@@ -149,6 +171,10 @@ namespace CG {
 			}
 			case LEX_LITERAL: {
 				itElement = IT::GetEntry(it, ltElement->idxTI);
+				if (f.leng) { LENGTH; f.leng = false; break; }
+				if (f.convert) { CONVERT; f.convert = false; break; }
+				if (f.loopParm) { LOOP_PARM; f.loopParm = false; f.loopBody = true; break; }
+				if (f.ifParm) { PUSH_INT; break; }
 				if (f.ret && !f.mainBody) {
 					if (itElement.iddatatype == 1) RETURN_INT
 					else {
@@ -171,9 +197,13 @@ namespace CG {
 					if (itElement.idtype == 3) PUSH_PARM_STR
 					else PUSH_STR;
 				}
-				if (f.print) {
-					if (itElement.iddatatype == 1) PRINT_INT
-					else PRINT_STR;
+				if (f.output) {
+					if (itElement.iddatatype == 1) OUTPUT_INT
+					else OUTPUT_STR;
+				}
+				if (f.outputline) {
+					if (itElement.iddatatype == 1) OUTPUTLINE_INT
+					else OUTPUTLINE_STR;
 				}
 				break;
 			}
@@ -187,11 +217,24 @@ namespace CG {
 				}
 				f.firstId = true;
 				f.asign = false;
-				f.print = false;
+				f.output = false;
+				f.outputline = false;
 				break;
 			}
-			case LEX_PRINT: {
-				f.print = true;
+			case LEX_OUTPUT: {
+				f.output = true;
+				break;
+			}
+			case LEX_OUTPUTLINE: {
+				f.outputline = true;
+				break;
+			}
+			case LEX_LENGTH: {
+				f.leng = true;
+				break;
+			}
+			case LEX_CONVERT: {
+				f.convert = true;
 				break;
 			}
 			case LEX_PLUS: {
@@ -220,6 +263,9 @@ namespace CG {
 				break;
 			}
 			case LEX_LEFTHESIS: {
+				if (f.ifParm&&!f.ifBody) {
+					break;
+				}
 				if (f.func && !f.funcBody) {
 					f.funcParm = true;
 				}
@@ -273,7 +319,66 @@ namespace CG {
 				else DEC;
 				break;
 			}
-
+			case LEX_IF: {
+				f.countIf = ltElement->numIf;
+				f.ifParm = true;
+				break;
+			}
+			case LEX_MORE: {
+				MORE;
+				break;
+			}
+			case LEX_LESS: {
+				LESS;
+				break;
+			}
+			case LEX_EQUAL: {
+				EQUAL;
+				break;
+			}
+			case LEX_DIFFERENT: {
+				DIFFERENT;
+				break;
+			}
+			case LEX_LOOP: {
+				f.countLoop = ltElement->numLoop;
+				f.loopParm = true;
+				break;
+			}
+			case LEX_LEFTSQUARE: {
+				if (f.ifParm) {
+					f.ifParm = false;
+					f.ifBody = true;
+				}
+				break;
+			}
+			case LEX_RIGHTSQUARE: {
+				if (f.loopBody) {
+					LOOP;
+					f.loopBody = false;
+					break;
+				}
+				if (f.ifBody) {
+					if (ltElement->next->lexema[0] == LEX_SEMICOLON) {
+						Asm << "ELSE_" << f.countIf << ":\n";
+						f.ifBody = false;
+						break;
+					}
+					else
+					{
+						Asm << "\tJMP ENDIF_" << f.countIf<<"\n";
+						Asm << "ELSE_" << f.countIf << ":\n";
+						f.ifBody = false;
+						f.elseBody = true;
+						break;
+					}
+				}
+				if (f.elseBody) {
+					Asm << "ENDIF_" << f.countIf << ":\n";
+					f.elseBody = false;
+				}
+				break;
+			}
 			default:
 				break;
 			}

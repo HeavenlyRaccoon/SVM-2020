@@ -17,8 +17,10 @@
 #define ASIGN_INT {Asm<<"\tpop eax\n\tmov "<<firstIdName<<", eax\n";}
 #define ASIGN_STR {Asm<<"\tpush offset "<< firstIdName<<"\n\tcall copyStr\n";}
 #define ASIGN_PARM_STR {Asm<<"\tpush ["<<firstIdName<<"]\n\tcall copyStr\n";}
-#define PRINT_INT {Asm<<"\tcall outint\n";}
-#define PRINT_STR {Asm<<"\tcall outstr\n";}
+#define OUTPUT_INT {Asm<<"\tmov ebx, ecx\n\tcall outint\n\tmov ecx, ebx\n";}
+#define OUTPUTLINE_INT {Asm<<"\tmov ebx, ecx\n\tcall outlineint\n\tmov ecx, ebx\n";}
+#define OUTPUT_STR {Asm<<"\tmov ebx, ecx\n\tcall outstr\n\tmov ecx, ebx\n";}
+#define OUTPUTLINE_STR {Asm<<"\tmov ebx, ecx\n\tcall outlinestr\n\tmov ecx, ebx\n";}
 #define PLUS_INT {Asm<<"\tpop eax\n\tpop ebx\n\tadd eax, ebx\n\t push eax\n";}
 #define PLUS_STR {Asm<<"\tcall concatStr\n\tpush eax\n";}
 #define MINUS {Asm<<"\tpop ebx\n\tpop eax\n\tsub eax, ebx\n\t push eax\n";}
@@ -31,6 +33,14 @@
 #define FIRST_DEC {Asm<<"\tdec "<<firstIdName<<'\n';}
 #define INC {Asm<<"\tpop eax\n\tinc eax\n\tpush eax\n";}
 #define DEC {Asm<<"\tpop eax\n\tdec eax\n\tpush eax\n";}
+#define MORE {Asm<<"\tpop ebx\n\tpop eax\n\tcmp eax, ebx\n\tJL ELSE_"<<f.countIf<<"\n";}
+#define LESS {Asm<<"\tpop ebx\n\tpop eax\n\tcmp eax, ebx\n\tJG ELSE_"<<f.countIf<<"\n";}
+#define EQUAL {Asm<<"\tpop ebx\n\tpop eax\n\tcmp eax, ebx\n\tJNE ELSE_"<<f.countIf<<"\n";}
+#define DIFFERENT {Asm<<"\tpop ebx\n\tpop eax\n\tcmp eax, ebx\n\tJE ELSE_"<<f.countIf<<"\n";}
+#define LENGTH {Asm<<"\tpush offset "<<itElement.visibility.function<<'_'<<itElement.id <<"\n\tcall len\n\tpush eax\n";}
+#define CONVERT {Asm<<"\tpush offset "<<itElement.visibility.function<<'_'<<itElement.id <<"\n\tcall ctoi\n\tpush eax\n";}
+#define LOOP_PARM {Asm<<"\tmov ecx, "<<itElement.visibility.function<<'_'<<itElement.id<<"\nLOOP_"<<f.countLoop<<":\n";}
+#define LOOP {Asm<<"loop LOOP_"<<f.countLoop<<"\n";}
 
 namespace CG {
 	bool CodeGeneration(IT::IdTable& it, LT::LexTable& lt);

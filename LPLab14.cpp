@@ -52,7 +52,10 @@ int main(int argc, char* argv[])
 	}
 	catch (Error::ERROR e) {
 		cout << "Ошибка " << e.id << ": " << e.message << endl << endl;
-		if (e.inext.line != -1) {
+		if (e.inext.line != -1&&e.inext.col==-1) {
+			cout << "строка " << e.inext.line<<endl << endl;
+		}
+		else if (e.inext.line != -1 && e.inext.col != -1) {
 			cout << "строка " << e.inext.line << " позиция " << e.inext.col << endl << endl;
 		}
 		Log::WriteError(log, e);

@@ -2,9 +2,10 @@
 #pragma warning(disable : 4996)
 
 namespace CreateT {
-
 	struct
 	{
+		int countLoop = 0;
+		int countIf = 0;
 		int DataType = 0;
 		int type = 1;
 		int vis = 0;
@@ -22,8 +23,8 @@ namespace CreateT {
 
 			LT::Entry entryBuf;
 			entryBuf.lexema[0] = compareLexem(lexem, &idx, &entryBuf, &idtable);
-			if (entryBuf.lexema[0] == '(')countHesis++;
-			if (entryBuf.lexema[0] == ')')countHesis--;
+			if (entryBuf.lexema[0] == LEX_LEFTHESIS)countHesis++;
+			if (entryBuf.lexema[0] == LEX_RIGHTHESIS)countHesis--;
 			entryBuf.sn = linePosition[i];
 			LT::Add(lextable, entryBuf);
 			lexem = strtok(NULL, " \n");
@@ -71,7 +72,7 @@ namespace CreateT {
 			cout << j << '\t';
 			while (value->sn == i) {
 				cout << value->lexema[0];
-				if (value->lexema[0] == 'i' || value->lexema[0] == 'l') {
+				if (value->lexema[0] == LEX_ID || value->lexema[0] == LEX_LITERAL) {
 					cout << "(" << value->idxTI << ")";
 				}
 				value = value->next;
@@ -156,85 +157,163 @@ namespace CreateT {
 			FST::NODE()
 		);
 
-		FST::FST fst6(lexem, 6,		//print
-			FST::NODE(1, FST::RELATION('p', 1)),
-			FST::NODE(1, FST::RELATION('r', 2)),
-			FST::NODE(1, FST::RELATION('i', 3)),
-			FST::NODE(1, FST::RELATION('n', 4)),
-			FST::NODE(1, FST::RELATION('t', 5)),
+		FST::FST fst6(lexem, 7,		//output
+			FST::NODE(1, FST::RELATION('o', 1)),
+			FST::NODE(1, FST::RELATION('u', 2)),
+			FST::NODE(1, FST::RELATION('t', 3)),
+			FST::NODE(1, FST::RELATION('p', 4)),
+			FST::NODE(1, FST::RELATION('u', 5)),
+			FST::NODE(1, FST::RELATION('t', 6)),
+			FST::NODE()
+		);
+		FST::FST fst7(lexem, 11,		//outputline
+			FST::NODE(1, FST::RELATION('o', 1)),
+			FST::NODE(1, FST::RELATION('u', 2)),
+			FST::NODE(1, FST::RELATION('t', 3)),
+			FST::NODE(1, FST::RELATION('p', 4)),
+			FST::NODE(1, FST::RELATION('u', 5)),
+			FST::NODE(1, FST::RELATION('t', 6)),
+			FST::NODE(1, FST::RELATION('l', 7)),
+			FST::NODE(1, FST::RELATION('i', 8)),
+			FST::NODE(1, FST::RELATION('n', 9)),
+			FST::NODE(1, FST::RELATION('e', 10)),
 			FST::NODE()
 		);
 
-		FST::FST fst7(lexem, 3,		//++
+		FST::FST fst8(lexem, 7,		//length
+			FST::NODE(1, FST::RELATION('l', 1)),
+			FST::NODE(1, FST::RELATION('e', 2)),
+			FST::NODE(1, FST::RELATION('n', 3)),
+			FST::NODE(1, FST::RELATION('g', 4)),
+			FST::NODE(1, FST::RELATION('t', 5)),
+			FST::NODE(1, FST::RELATION('h', 6)),
+			FST::NODE()
+		);
+
+		FST::FST fst9(lexem, 5,		//ctoi
+			FST::NODE(1, FST::RELATION('c', 1)),
+			FST::NODE(1, FST::RELATION('t', 2)),
+			FST::NODE(1, FST::RELATION('o', 3)),
+			FST::NODE(1, FST::RELATION('i', 4)),
+			FST::NODE()
+		);
+
+		FST::FST fst10(lexem, 5,		//loop
+			FST::NODE(1, FST::RELATION('l', 1)),
+			FST::NODE(1, FST::RELATION('o', 2)),
+			FST::NODE(1, FST::RELATION('o', 3)),
+			FST::NODE(1, FST::RELATION('p', 4)),
+			FST::NODE()
+		);
+
+		FST::FST fst11(lexem, 3,		//if
+			FST::NODE(1, FST::RELATION('i', 1)),
+			FST::NODE(1, FST::RELATION('f', 2)),
+			FST::NODE()
+		);
+		FST::FST fst12(lexem, 5,		//else
+			FST::NODE(1, FST::RELATION('e', 1)),
+			FST::NODE(1, FST::RELATION('l', 2)),
+			FST::NODE(1, FST::RELATION('s', 3)),
+			FST::NODE(1, FST::RELATION('e', 4)),
+			FST::NODE()
+		);
+
+		FST::FST fst13(lexem, 3,		//++
 			FST::NODE(1, FST::RELATION('+', 1)),
 			FST::NODE(1, FST::RELATION('+', 2)),
 			FST::NODE()
 		);
-		FST::FST fst8(lexem, 3,		//--
+		FST::FST fst14(lexem, 3,		//--
 			FST::NODE(1, FST::RELATION('-', 1)),
 			FST::NODE(1, FST::RELATION('-', 2)),
 			FST::NODE()
 		);
-		FST::FST fst9(lexem, 2,		//;
+		FST::FST fst15(lexem, 2,		//;
 			FST::NODE(1, FST::RELATION(';', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst10(lexem, 2,		//,
+		FST::FST fst16(lexem, 2,		//,
 			FST::NODE(1, FST::RELATION(',', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst11(lexem, 2,		//{
+		FST::FST fst17(lexem, 2,		//[
+			FST::NODE(1, FST::RELATION('[', 1)),
+			FST::NODE()
+		);
+		FST::FST fst18(lexem, 2,		//]
+			FST::NODE(1, FST::RELATION(']', 1)),
+			FST::NODE()
+		);
+
+		FST::FST fst19(lexem, 2,		//{
 			FST::NODE(1, FST::RELATION('{', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst12(lexem, 2,		//}
+		FST::FST fst20(lexem, 2,		//}
 			FST::NODE(1, FST::RELATION('}', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst13(lexem, 2,		//(
+		FST::FST fst21(lexem, 2,		//(
 			FST::NODE(1, FST::RELATION('(', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst14(lexem, 2,		//)
+		FST::FST fst22(lexem, 2,		//)
 			FST::NODE(1, FST::RELATION(')', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst15(lexem, 2,		//+
+		FST::FST fst23(lexem, 2,		//+
 			FST::NODE(1, FST::RELATION('+', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst16(lexem, 2,		//-
+		FST::FST fst24(lexem, 2,		//-
 			FST::NODE(1, FST::RELATION('-', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst17(lexem, 2,		//*
+		FST::FST fst25(lexem, 2,		//*
 			FST::NODE(1, FST::RELATION('*', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst18(lexem, 2,		//
+		FST::FST fst26(lexem, 2,		//
 			FST::NODE(1, FST::RELATION('/', 1)),
 			FST::NODE()
 		);
 
-		FST::FST fst19(lexem, 2,		//=
+		FST::FST fst27(lexem, 2,		//=
 			FST::NODE(1, FST::RELATION('=', 1)),
 			FST::NODE()
 		);
-		FST::FST fst20(lexem, 2,		//%
+		FST::FST fst28(lexem, 2,		//%
 			FST::NODE(1, FST::RELATION('%', 1)),
 			FST::NODE()
 		);
+		FST::FST fst29(lexem, 2,		//>
+			FST::NODE(1, FST::RELATION('>', 1)),
+			FST::NODE()
+		);
+		FST::FST fst30(lexem, 2,		//<
+			FST::NODE(1, FST::RELATION('<', 1)),
+			FST::NODE()
+		);
+		FST::FST fst31(lexem, 2,		//&
+			FST::NODE(1, FST::RELATION('&', 1)),
+			FST::NODE()
+		);
+		FST::FST fst32(lexem, 2,		//!
+			FST::NODE(1, FST::RELATION('!', 1)),
+			FST::NODE()
+		);
 
-		FST::FST fst21(lexem, 2,		//1234535
+		FST::FST fst33(lexem, 2,		//1234535
 			FST::NODE(10, FST::RELATION('0', 1), FST::RELATION('1', 1), FST::RELATION('2', 1),
 				FST::RELATION('3', 1), FST::RELATION('4', 1), FST::RELATION('5', 1),
 				FST::RELATION('6', 1), FST::RELATION('7', 1), FST::RELATION('8', 1), FST::RELATION('9', 1)),
@@ -244,7 +323,7 @@ namespace CreateT {
 
 		);
 
-		FST::FST fst22(lexem, 5,		//main
+		FST::FST fst34(lexem, 5,		//main
 			FST::NODE(1, FST::RELATION('m', 1)),
 			FST::NODE(1, FST::RELATION('a', 2)),
 			FST::NODE(1, FST::RELATION('i', 3)),
@@ -254,29 +333,41 @@ namespace CreateT {
 
 		entry->idxTI = TI_NULLIDX;
 		entry->priority = NULL;
-		if (FST::execute(fst1) == -1) { flags.DataType = 1; return 't'; }
-		else if (FST::execute(fst2) == -1) { flags.DataType = 2; return 't'; }
-		else if (FST::execute(fst3) == -1) { flags.type = 2; flags.visCheck = true; flags.decl = true;  return 'f'; }
-		else if (FST::execute(fst4) == -1) { flags.decl = true; return 'd'; }
-		else if (FST::execute(fst5) == -1) return 'r';
-		else if (FST::execute(fst6) == -1) return 'p';
-		else if (FST::execute(fst7) == -1) { entry->priority = 2; return 'x'; }
-		else if (FST::execute(fst8) == -1) { entry->priority = 2; return 'z';}
-		else if (FST::execute(fst9) == -1) return ';';
-		else if (FST::execute(fst10) == -1) return ',';
-		else if (FST::execute(fst11) == -1) { if (flags.visCheck)flags.vis++; return '{'; }
-		else if (FST::execute(fst12) == -1) { if (flags.visCheck) { flags.vis--; func.pop(); if (func.empty()) { flags.visCheck = false; } } return '}'; }
-		else if (FST::execute(fst13) == -1) { entry->priority = 0; flags.type = 3; if (flags.visCheck)flags.vis++; return '('; }
-		else if (FST::execute(fst14) == -1) { entry->priority = 0; flags.type = 1; if (flags.visCheck)flags.vis--;  return ')'; }
-		else if (FST::execute(fst15) == -1) { entry->priority = 2; return '+'; }
-		else if (FST::execute(fst16) == -1) { entry->priority = 2; return '-'; }
-		else if (FST::execute(fst17) == -1) { entry->priority = 3; return '*'; }
-		else if (FST::execute(fst18) == -1) { entry->priority = 3; return '/'; }
-		else if (FST::execute(fst19) == -1) return '=';
-		else if (FST::execute(fst20) == -1) { entry->priority = 3; return '%'; }
+		if (FST::execute(fst1) == -1) { flags.DataType = 1; return LEX_INTEGER; }
+		else if (FST::execute(fst2) == -1) { flags.DataType = 2; return LEX_STRING; }
+		else if (FST::execute(fst3) == -1) { flags.type = 2; flags.visCheck = true; flags.decl = true;  return LEX_FUNCTION; }
+		else if (FST::execute(fst4) == -1) { flags.decl = true; return LEX_DECLARE; }
+		else if (FST::execute(fst5) == -1) return LEX_RETURN;
+		else if (FST::execute(fst6) == -1) return LEX_OUTPUT;
+		else if (FST::execute(fst7) == -1) return LEX_OUTPUTLINE;
+		else if (FST::execute(fst8) == -1) return LEX_LENGTH;
+		else if (FST::execute(fst9) == -1) return LEX_CONVERT;
+		else if (FST::execute(fst10) == -1) { entry->numLoop = flags.countLoop; flags.countLoop++; return LEX_LOOP; }
+		else if (FST::execute(fst11) == -1) { entry->numIf = flags.countIf; flags.countIf++; return LEX_IF; }
+		else if (FST::execute(fst12) == -1) { return LEX_ELSE; }
+		else if (FST::execute(fst13) == -1) { entry->priority = 2; return LEX_INC; }
+		else if (FST::execute(fst14) == -1) { entry->priority = 2; return LEX_DEC;}
+		else if (FST::execute(fst15) == -1) return LEX_SEMICOLON;
+		else if (FST::execute(fst16) == -1) return LEX_COMMA;
+		else if (FST::execute(fst17) == -1) return LEX_LEFTSQUARE;
+		else if (FST::execute(fst18) == -1) return LEX_RIGHTSQUARE;
+		else if (FST::execute(fst19) == -1) { if (flags.visCheck)flags.vis++; return LEX_LEFTBRACE; }
+		else if (FST::execute(fst20) == -1) { if (flags.visCheck) { flags.vis--; func.pop(); if (func.empty()) { flags.visCheck = false; } } return LEX_BRACELET; }
+		else if (FST::execute(fst21) == -1) { entry->priority = 0; flags.type = 3; if (flags.visCheck)flags.vis++; return LEX_LEFTHESIS; }
+		else if (FST::execute(fst22) == -1) { entry->priority = 0; flags.type = 1; if (flags.visCheck)flags.vis--;  return LEX_RIGHTHESIS; }
+		else if (FST::execute(fst23) == -1) { entry->priority = 2; return LEX_PLUS; }
+		else if (FST::execute(fst24) == -1) { entry->priority = 2; return LEX_MINUS; }
+		else if (FST::execute(fst25) == -1) { entry->priority = 3; return LEX_STAR; }
+		else if (FST::execute(fst26) == -1) { entry->priority = 3; return LEX_DIRSLASH; }
+		else if (FST::execute(fst27) == -1) return LEX_ASIGN;
+		else if (FST::execute(fst28) == -1) { entry->priority = 3; return LEX_MODULO; }
+		else if (FST::execute(fst29) == -1) { entry->priority = 2; return LEX_MORE;}
+		else if (FST::execute(fst30) == -1) { entry->priority = 2; return LEX_LESS;}
+		else if (FST::execute(fst31) == -1) { entry->priority = 2; return LEX_EQUAL;}
+		else if (FST::execute(fst32) == -1) { entry->priority = 2; return LEX_DIFFERENT;}
 		else {
-			if (FST::execute(fst21) == -1) { flags.type = 4; flags.DataType = 1; }
-			else if(FST::execute(fst22) == -1){
+			if (FST::execute(fst33) == -1) { flags.type = 4; flags.DataType = 1; }
+			else if(FST::execute(fst34) == -1){
 				flags.type = 2;
 				flags.DataType = 1;
 				flags.main = true;
@@ -285,7 +376,7 @@ namespace CreateT {
 			if (ltHaveLex(*idtable, lexem)) {
 				entry->idxTI = ltHaveLex(*idtable, lexem);
 				if (IT::GetEntry(*idtable, ltHaveLex(*idtable, lexem)).idtype == 4) { return LEX_LITERAL; }
-				else { return 'i'; }
+				else { return LEX_ID; }
 			}
 			else {
 
@@ -329,7 +420,15 @@ namespace CreateT {
 					}
 					else
 					{
-						entryBuf.value.vint = atoi(lexem);
+						if (lexem[0] == '0') {
+							int result = 0;
+							for (int i = 1; i < strlen(lexem); i++) {
+								result += pow(8, strlen(lexem)-1 - i)*((int)lexem[i] - 48);
+							}
+							entryBuf.value.vint = result;
+						}
+						else{ entryBuf.value.vint = atoi(lexem); }
+						
 					}
 					
 					break;
@@ -343,7 +442,7 @@ namespace CreateT {
 				flags.decl = false;
 				if (flags.type == 4) { flags.type = 1; return LEX_LITERAL; }
 				if (flags.main) { flags.main = false; flags.type = 1; return MAIN_LITERAL; }
-				else return 'i';
+				else return LEX_ID;
 			}
 		}
 	}

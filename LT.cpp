@@ -32,6 +32,8 @@ namespace LT {
 
 			lextable.table->lexema[0] = entry.lexema[0];
 			lextable.table->sn = entry.sn;
+			lextable.table->numIf = entry.numIf;
+			lextable.table->numLoop = entry.numLoop;
 			lextable.table->idxTI = entry.idxTI;
 			lextable.table->priority = entry.priority;
 			lextable.table->next = new Entry;
